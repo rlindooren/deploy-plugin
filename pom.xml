@@ -18,7 +18,7 @@
     <url>http://wiki.hudson-ci.org/display/HUDSON/Deploy+Plugin</url>
     
     <properties>
-        <cargo.version>1.0.4</cargo.version>
+        <cargo.version>1.1.2</cargo.version>
     </properties>
 
     <scm>
@@ -39,12 +39,16 @@
         <developer>
             <id>wjprakash</id>
             <name>Winston Prakash</name>
-        </developer>
-        <developer>
-            <id>kohsuke</id>
-            <name>Kohsuke Kawaguchi</name>
+            <email>Winston.Prakash@gmail.com</email>
         </developer>
     </developers>
+    
+    <contributors>
+        <contributor> 
+            <id>kohsuke</id>
+            <name>Kohsuke Kawaguchi</name>
+        </contributor>
+    </contributors>
   
     <dependencies>
         <dependency>
