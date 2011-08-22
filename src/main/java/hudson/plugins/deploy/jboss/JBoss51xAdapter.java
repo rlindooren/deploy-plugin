@@ -5,23 +5,25 @@ import hudson.plugins.deploy.ContainerAdapterDescriptor;
 import org.kohsuke.stapler.DataBoundConstructor;
 
 /**
- * @author Kohsuke Kawaguchi
+ * Cargo Container Adapter for JBoss 5.x remote deployment
+ * @author Winston Prakash
  */
-public class JBoss5xAdapter extends JBossAdapter {
+public class JBoss51xAdapter extends JBoss5xAdapter {
     @DataBoundConstructor
-    public JBoss5xAdapter(String url, String password, String userName) {
-        super(url, password, userName);
+    public JBoss51xAdapter(String url, String password, String userName, Integer rmiPort) {
+        super(url, password, userName, rmiPort);
     }
 
+    @Override
     public String getContainerId() {
-        return "jboss5x";
+        return "jboss51x";
     }
 
 
     @Extension
     public static final class DescriptorImpl extends ContainerAdapterDescriptor {
         public String getDisplayName() {
-            return "JBoss 5.x";
+            return "JBoss 5.1.x";
         }
     }
 }

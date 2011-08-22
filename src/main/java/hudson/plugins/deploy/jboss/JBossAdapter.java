@@ -9,7 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
- * Base class for JBoss adapters.
+ * Base class for Cargo Container adapters .
  *
  * @author Kohsuke Kawaguchi
  */
