@@ -23,6 +23,7 @@ import org.codehaus.cargo.generic.deployer.DeployerFactory;
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.URLClassLoader;
 
 /**
  * Provides container-specific glue code.
@@ -33,6 +34,7 @@ import java.io.Serializable;
  * @author Kohsuke Kawaguchi
  */
 public abstract class CargoContainerAdapter extends ContainerAdapter implements Serializable {
+
     /**
      * Returns the container ID used by Cargo.
      * @return
@@ -50,11 +52,11 @@ public abstract class CargoContainerAdapter extends ContainerAdapter implements 
         configure(config);
         return containerFactory.createContainer(id, ContainerType.REMOTE, config);
     }
-    
+
     protected void deploy(DeployerFactory deployerFactory, final BuildListener listener, Container container, File f) {
         Deployer deployer = deployerFactory.createDeployer(container);
 
-        listener.getLogger().println("Deploying "+f+" to container "+container.getName());
+        listener.getLogger().println("Deploying " + f + " to container " + container.getName());
 
         deployer.setLogger(new LoggerImpl(listener.getLogger()));
         deployer.redeploy(createDeployable(f));
@@ -71,19 +73,26 @@ public abstract class CargoContainerAdapter extends ContainerAdapter implements 
 
     public boolean redeploy(FilePath war, AbstractBuild<?, ?> build, Launcher launcher, final BuildListener listener) throws IOException, InterruptedException {
         return war.act(new FileCallable<Boolean>() {
+
             public Boolean invoke(File f, VirtualChannel channel) throws IOException {
-                if(!f.exists()) {
+                if (!f.exists()) {
                     listener.error(Messages.DeployPublisher_NoSuchFile(f));
                     return true;
                 }
-                ClassLoader cl = getClass().getClassLoader();
-                final ConfigurationFactory configFactory = new DefaultConfigurationFactory(cl);
-                final ContainerFactory containerFactory = new DefaultContainerFactory(cl);
-                final DeployerFactory deployerFactory = new DefaultDeployerFactory(cl);
 
-                Container container = getContainer(configFactory, containerFactory, getContainerId());
-                
-                deploy(deployerFactory, listener, container, f);
+                final ConfigurationFactory configFactory = new DefaultConfigurationFactory();
+                final ContainerFactory containerFactory = new DefaultContainerFactory();
+                final DeployerFactory deployerFactory = new DefaultDeployerFactory();
+
+                ClassLoader pluginClassLoader = DeployPublisher.class.getClassLoader();
+                ClassLoader prevContextClassLoader = Thread.currentThread().getContextClassLoader();
+                try {
+                    Thread.currentThread().setContextClassLoader(pluginClassLoader);
+                    Container container = getContainer(configFactory, containerFactory, getContainerId());
+                    deploy(deployerFactory, listener, container, f);
+                } finally {
+                    Thread.currentThread().setContextClassLoader(prevContextClassLoader);
+                }
                 return true;
             }
         });
