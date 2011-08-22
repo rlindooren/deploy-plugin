@@ -5,8 +5,7 @@
     <parent>
         <groupId>org.jvnet.hudson.plugins</groupId>
         <artifactId>hudson-plugin-parent</artifactId>
-        <version>2.1.0</version>
-        <relativePath>../pom.xml</relativePath>
+        <version>2.1.1-SNAPSHOT</version>
     </parent>
 
     <groupId>org.hudsonci.plugins</groupId>
@@ -45,10 +44,26 @@
     
     <contributors>
         <contributor> 
-            <id>kohsuke</id>
             <name>Kohsuke Kawaguchi</name>
         </contributor>
     </contributors>
+    
+    <repositories>
+        <repository>
+            <id>JBoss Repo</id>
+            <url>http://repository.jboss.org/nexus/content/groups/public-jboss/</url>
+            <name>JBoss Repo</name>
+            <layout>default</layout>
+        </repository>
+        
+        <repository>
+            <id>jboss-deprecated-repository</id>
+            <name>JBoss Deprecated Maven Repository</name>
+            <url>https://repository.jboss.org/nexus/content/repositories/deprecated/</url>
+            <layout>default</layout>
+        </repository>
+         
+    </repositories>
   
     <dependencies>
         <dependency>
@@ -68,6 +83,10 @@
                     <groupId>ant</groupId>
                     <artifactId>ant</artifactId>
                 </exclusion>
+                <exclusion>
+                    <artifactId>commons-logging</artifactId>
+                    <groupId>commons-logging</groupId>
+                </exclusion>
             </exclusions>
         </dependency>
     
@@ -75,6 +94,12 @@
             <groupId>org.codehaus.cargo</groupId>
             <artifactId>cargo-core-container-jboss</artifactId>
             <version>${cargo.version}</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>commons-logging</artifactId>
+                    <groupId>commons-logging</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.codehaus.cargo</groupId>
@@ -91,6 +116,15 @@
             <artifactId>cargo-core-container-weblogic</artifactId>
             <version>${cargo.version}</version>
         </dependency>
+         
+        <dependency>
+            <groupId>org.jboss.jbossas</groupId>
+            <artifactId>jboss-as-profileservice-client</artifactId>
+            <version>6.0.0.Final</version>
+            <type>pom</type>
+        </dependency>
+        
+        
     </dependencies>
 
 </project>
